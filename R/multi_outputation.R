@@ -43,6 +43,9 @@ multiout <- function(fn, M, data, id, leave.as.list = FALSE)
     return(outputated)
   } else
   {
-    return(colMeans(do.call(rbind, outputated)))
+    outputated <- do.call(rbind, outputated)
+    Sigma <- var(outputated)
+    mu <- colMeans(outputated)
+    return(list(mu = mu, Sigma = Sigma))
   }
 }
