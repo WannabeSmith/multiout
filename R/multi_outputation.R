@@ -12,31 +12,27 @@
 #' @export
 multiout <- function(fn, M, data, id, leave.as.list = FALSE)
 {
+  setDT(data)
+
   print("Generating and transposing list of samples...")
-  samples.list <- lapply(split(data, data[, id]), function(sub.data){
-    sub.sample <- sub.data[sample(nrow(sub.data), M, replace = TRUE),]
+  # For each id, sample M times from the subdataset for that id (with replacement)
+  samples.DT <- data[, .SD[sample(nrow(.SD), M, replace = TRUE)], by = id]
+  # Assign a multiple outputation index to each row within each id group
+  # (Note: can just do 1:.N since sampling was random)
+  samples.DT[, MO_idx := 1:.N, by = id]
 
-    # Turn each sub-sample into a list of rows
-    # so the final samples.list can be transposed efficiently
-    return(split(sub.sample, seq(nrow(sub.sample))))
-  })
-
-  samples.list.tr <- transpose(samples.list)
+  # Get a list of sub-datasets to apply fn over
+  MO.list <- split(samples.DT, by = "MO_idx")
+  # Coerce to data.frame just in case the user passes a function that can't deal with data.tables
+  MO.list.DF <- lapply(MO.list, as.data.frame)
   print("Generating and transposing list of samples - DONE")
 
-  build.and.analyze <- function(x){
-    # Create the outputation sub-dataset
-    out.data <- do.call(rbind, x)
-
-    # Analyze the data
-    fn(out.data)
-  }
-
   print("Performing outputation...")
-  outputated <- lapply(samples.list.tr, build.and.analyze)
+  # Apply the function to each sub-dataset
+  outputated <- lapply(MO.list.DF, fn)
   print("Performing outputation - DONE")
 
-  # TODO: Deal with variance estimate (not necessary for our project)
+  # TODO: Deal with variance estimate
 
   if (leave.as.list)
   {
