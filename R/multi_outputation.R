@@ -12,7 +12,7 @@
 #' @export
 multiout <- function(fn, M, data, id, leave.as.list = FALSE)
 {
-  setDT(data)
+  data <- as.data.table(data)
 
   print("Generating and transposing list of samples...")
   # For each id, sample M times from the subdataset for that id (with replacement)
