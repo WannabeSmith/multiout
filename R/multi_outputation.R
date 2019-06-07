@@ -2,7 +2,7 @@
 #'
 #' Perform multiple outputation on a dataset to obtain estimates of generic parameters
 #'
-#' @importFrom purrr transpose
+#' @import data.table
 #' @param fn a function to apply to each sub-data set
 #' @param M the (positive integer) number of outputations to perform
 #' @param data the data.frame

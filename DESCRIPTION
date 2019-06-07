@@ -6,7 +6,7 @@ Authors@R: c(person("Ian", "Waudby-Smith", email = "ianws@cmu.edu", role = c("au
 Maintainer: Ian Waudby-Smith <ianws@cmu.edu>
 Description: Hoffman, Sen, and Weinberg (2001) describe a computationally intensive but flexible process to analyze correlated data.
 Imports:
-    purrr
+    data.table
 License: MIT + file LICENSE 
 Encoding: UTF-8
 LazyData: true
